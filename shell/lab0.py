@@ -8,7 +8,7 @@ def my_getLine():
     global limit
     line = ""
     char = my_getChar()
-    while (char!= '' and char != "EOF"):
+    while (char!= '' and char != None):
         line += char
         char = my_getChar()
 
@@ -24,7 +24,7 @@ def my_getChar():
         next = 0
         limit = read(0,100)
         if limit == 0:
-            return "EOF"
+            return None
 
     if next < len(limit) -1:
         c = chr(limit[next])
@@ -32,4 +32,4 @@ def my_getChar():
         return c
 
     else:
-        return "EOF"
+        return None
