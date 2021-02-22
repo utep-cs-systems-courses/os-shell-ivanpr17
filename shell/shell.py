@@ -10,19 +10,20 @@ def execute(args):
 
     elif args[0] == "cd":
         try:
-            if len(args) == 1:
+            if len(args) == 1:#go one directory back
                 os.chdir("..")
-            else:
+            else:#go to directory provided
                 os.chdir(args[1])
         except:
             pass
             
-    elif "|" in args:
+    elif "|" in args:#pipe
         pipe(args)
 
     else:
         rc = os.fork()
         background = True
+        #background
         if "&" in args:
             args.remove("&")
             background = False
@@ -40,7 +41,7 @@ def execute(args):
             elif ">" in args or "<" in args:
                 redirection(args)
             else:
-                for dir in re.split(":", os.environ['PATH']):
+                for dir in re.split(":", os.environ['PATH']):#try directories in path
                     program = "%s/%s" % (dir, args[0])
                     try:
                         os.execve(program, args, os.environ)
@@ -102,12 +103,14 @@ def pipe(args):
         sys.exit(1)
 
 def redirection(args):
+    #output
     if '>' in args:
         os.close(1)
         os.open(args[args.index('>')+1], os.O_CREAT | os.O_WRONLY)
         os.set_inheritable(1,True)
         args.remove(args[args.index('>')+1])
         args.remove('>')
+    #input
     else:
         os.close(0)
         os.open(args[args.index('<')+1], os.O_RDONLY)
@@ -131,10 +134,6 @@ while (1):
         os.write(1,(os.environ['PS1']).encode())
     else:
         os.write(1,("$ ").encode())
-    #args = os.read(0, 1024)
-    #args = args.decode().splitlines()
-    #for arg in args:
-        #execute(arg.split())
 
     input = my_getLine()
     args = input.split()
